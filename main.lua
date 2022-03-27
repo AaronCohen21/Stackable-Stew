@@ -90,8 +90,8 @@ function mod:SetTearEffects()
                 Tear.CollisionDamage = Tear.CollisionDamage + damageBoost
 
                 --Change tear size (currently not working)
-                -- Tear:SetSize(Tear.Size * damageBoost/10, Vector(damageBoost/10, damageBoost/10), math.floor(damageBoost/10))
-                -- Tear.SpriteScale = Tear.SpriteScale + Vector(damageBoost/10, damageBoost/10)
+                Tear:SetSize(Tear.Size + damageBoost/21.6, Tear.SizeMulti + Vector(damageBoost/21.6, damageBoost/21.6), 0)
+                Tear.Scale = Tear.Scale + damageBoost/21.6
 
                 --Flag tear as having damage changed
                 entity:GetData()["HasStewDamageBoost"] = true
