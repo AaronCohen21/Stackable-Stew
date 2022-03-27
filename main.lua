@@ -173,7 +173,7 @@ function stackable_stew:RenderDamageStats()
         local f = Font()
         f:Load("font/terminus.fnt")
         --Draw Title
-        f:DrawStringScaled("Stew Boosts",renderX,renderY,0.5,0.5,KColor(1,1,1,1),0,true)
+        f:DrawStringScaled("Stew Buffs",renderX,renderY,0.5,0.5,KColor(1,1,1,1),0,true)
         --Draw Individual Boosts & calculate total damage
         totalDMG = 0 + Game():GetPlayer(0).Damage
         for i in ipairs(damages) do
