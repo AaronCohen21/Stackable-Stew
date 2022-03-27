@@ -1,0 +1,3 @@
+<items gfxroot="gfx/items/" version="1">
+	<passive description="Full HP + Temporary DMG Up" gfx="stackable_stew.png" name="Stackable Stew" quality="2"/>
+</items>
