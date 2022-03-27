@@ -56,7 +56,7 @@ function stackable_stew:Update()
         player:SetFullHearts()
         --player.Damage = player.Damage + 21.6
         --Add player costume
-        
+        player:AddNullCostume(Isaac.GetCostumeIdByPath("gfx/characters/stackable_stew.anm2"))
     end
 end
 stackable_stew:AddCallback(ModCallbacks.MC_POST_UPDATE, stackable_stew.Update)

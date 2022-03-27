@@ -1,0 +1,4 @@
+<?xml version="1.0"?>
+<costumes anm2root="gfx/characters/">
+	<costume type="none" id="Stackable Stew" anm2path="stackable_stew.anm2"/> 
+</costumes>
