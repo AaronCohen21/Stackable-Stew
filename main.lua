@@ -9,6 +9,8 @@ mod.STEW_ITEM_ID = Isaac.GetItemIdByName("Stackable Stew")
 local numStews = 0
 local damages = {}
 local time = 0
+local renderX = 5
+local renderY = 212
 
 
 
@@ -116,13 +118,12 @@ mod:AddCallback(ModCallbacks.MC_POST_ENTITY_KILL, mod.BoostDamages)
 
 --This function takes the damages table and outputs its values to the console (used for debugging)
 --Code 'borrowed' from https://stackoverflow.com/questions/7274380/how-do-i-display-array-elements-in-lua
-function print_damages(arr, indentLevel)
+function array_to_string(arr, indentLevel)
     local str = ""
     local indentStr = "#"
 
     if(indentLevel == nil) then
-        print(print_damages(arr, 0))
-        return
+        return array_to_string(arr, 0)
     end
 
     for i = 0, indentLevel do
@@ -131,10 +132,50 @@ function print_damages(arr, indentLevel)
 
     for index,value in pairs(arr) do
         if type(value) == "table" then
-            str = str..indentStr..index..": \n"..print_r(value, (indentLevel + 1))
+            str = str..indentStr..index..": \n"..array_to_string(value, (indentLevel + 1))
         else 
-            str = str..indentStr..index..": "..value.."\n"
+            str = str.."#"..index..": "..value.."\n"
         end
     end
-    print(str)
+    return str
 end
+
+
+
+--To render the actual damage output of the player's tears
+function mod:RenderDamageStats()
+    if #damages ~= 0 then
+        --Set up font
+        local f = Font()
+        f:Load("font/terminus.fnt")
+        --Draw Title
+        f:DrawStringScaled("Stew Boosts",renderX,renderY,0.5,0.5,KColor(1,1,1,1),0,true)
+        --Draw Individual Boosts & calculate total damage
+        totalDMG = 0 + Game():GetPlayer(0).Damage
+        for i in ipairs(damages) do
+            totalDMG = totalDMG + damages[i]
+            f:DrawStringScaled("#"..i..": "..damages[i],renderX,renderY+10*i,0.5,0.5,KColor(1,1,1,1),0,true)
+        end
+        --Draw damage sum
+        f:DrawStringScaled("Total Damage: "..string.format("%.2f",totalDMG),renderX,renderY+10+10*#damages,0.5,0.5,KColor(1,1,1,1),0,true)
+    end
+end
+mod:AddCallback(ModCallbacks.MC_POST_RENDER, mod.RenderDamageStats)
+
+
+
+--To edit the position of the HUD element
+function mod:UpdateUIPos()
+    if (#damages ~= 0) and (Input.IsButtonPressed(Keyboard.KEY_COMMA,0)) then
+        if Input.IsButtonPressed(Keyboard.KEY_RIGHT,0) then
+            renderX = renderX + 1
+          elseif Input.IsButtonPressed(Keyboard.KEY_LEFT,0) then
+            renderX = renderX - 1
+          elseif Input.IsButtonPressed(Keyboard.KEY_UP,0) then
+            renderY = renderY - 1
+          elseif Input.IsButtonPressed(Keyboard.KEY_DOWN,0) then
+            renderY = renderY + 1
+          end
+    end
+end
+mod:AddCallback(ModCallbacks.MC_POST_UPDATE, mod.UpdateUIPos)
