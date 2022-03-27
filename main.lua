@@ -1,7 +1,7 @@
 --All code written by Aaron Cohen
 
-local mod = RegisterMod("stackable_stew",1)
-mod.STEW_ITEM_ID = Isaac.GetItemIdByName("Stackable Stew")
+local stackable_stew = RegisterMod("stackable_stew",1)
+stackable_stew.STEW_ITEM_ID = Isaac.GetItemIdByName("Stackable Stew")
 
 
 
@@ -14,7 +14,31 @@ local renderY = 212
 
 
 
-function mod:Update()
+-- --Save/Load Data
+-- --For reasons I can't understand this causes an error
+-- --However, everything seems to work fine without this
+--local json = require("json")
+-- function stackable_stew:saveData()
+--     local table = {numStews, damages, time, renderX, renderY}
+--     stackable_stew:SaveData(stackable_stew, json.encode(table))
+-- end
+-- stackable_stew:AddCallback(ModCallbacks.MC_PRE_GAME_EXIT, stackable_stew.saveData)
+
+-- function stackable_stew:loadData()
+--     if stackable_stew:HasData() then
+--         local data = json.decode(Isaac.LoadModData(stackable_stew))
+--         numStews = data[1]
+--         damages = data[2]
+--         time = data[3]
+--         renderX = data[4]
+--         renderY = data[5]
+--     end
+-- end
+-- stackable_stew:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, stackable_stew.loadData)
+
+
+
+function stackable_stew:Update()
     --RESET VALUES HERE
     if Game():GetFrameCount() == 1 then
 		numStews = 0 --sets numStews to 0 at the start of the run
@@ -23,7 +47,7 @@ function mod:Update()
 	end
 
     --When the player picks up a stew item
-    if (Game():GetPlayer(0):GetCollectibleNum(mod.STEW_ITEM_ID) > numStews) then
+    if (Game():GetPlayer(0):GetCollectibleNum(stackable_stew.STEW_ITEM_ID) > numStews) then
         numStews = numStews + 1
         --Add the new stew damage to the damages array
         table.insert(damages, 21.6)
@@ -35,12 +59,12 @@ function mod:Update()
         
     end
 end
-mod:AddCallback(ModCallbacks.MC_POST_UPDATE, mod.Update)
+stackable_stew:AddCallback(ModCallbacks.MC_POST_UPDATE, stackable_stew.Update)
 
 
 
 --This handles the damage reduction over time per stew
-function mod:UpdateDamages()
+function stackable_stew:UpdateDamages()
     --Every time 1 second of game time has passed
     if math.floor(Game().TimeCounter/30) > time then
         time = time + 1
@@ -64,12 +88,12 @@ function mod:UpdateDamages()
         --Game():GetPlayer(0).Damage = Game():GetPlayer(0).Damage - delta_damage
     end
 end
-mod:AddCallback(ModCallbacks.MC_POST_PEFFECT_UPDATE, mod.UpdateDamages)
+stackable_stew:AddCallback(ModCallbacks.MC_POST_PEFFECT_UPDATE, stackable_stew.UpdateDamages)
 
 
 
 --This handles applying and removing the tear effects
-function mod:SetTearEffects()
+function stackable_stew:SetTearEffects()
     if #damages ~= 0 then
         --Get damage to add to unboosted tears
         damageBoost = 0
@@ -99,20 +123,20 @@ function mod:SetTearEffects()
         end
     end
 end
-mod:AddCallback(ModCallbacks.MC_POST_PEFFECT_UPDATE, mod.SetTearEffects)
+stackable_stew:AddCallback(ModCallbacks.MC_POST_PEFFECT_UPDATE, stackable_stew.SetTearEffects)
 
 
 
 --Every time an enemy is killed, boost the temporary damages by 0.04
 --This mimmicks the 'Lusty Blood' effect of the stew
-function mod:BoostDamages()
+function stackable_stew:BoostDamages()
     player = Game():GetPlayer(0)
     for i in ipairs(damages) do
         --player.Damage = player.Damage + 0.04
         damages[i] = damages[i] + 0.04
     end
 end
-mod:AddCallback(ModCallbacks.MC_POST_ENTITY_KILL, mod.BoostDamages)
+stackable_stew:AddCallback(ModCallbacks.MC_POST_ENTITY_KILL, stackable_stew.BoostDamages)
 
 
 
@@ -143,7 +167,7 @@ end
 
 
 --To render the actual damage output of the player's tears
-function mod:RenderDamageStats()
+function stackable_stew:RenderDamageStats()
     if #damages ~= 0 then
         --Set up font
         local f = Font()
@@ -160,12 +184,12 @@ function mod:RenderDamageStats()
         f:DrawStringScaled("Total Damage: "..string.format("%.2f",totalDMG),renderX,renderY+10+10*#damages,0.5,0.5,KColor(1,1,1,1),0,true)
     end
 end
-mod:AddCallback(ModCallbacks.MC_POST_RENDER, mod.RenderDamageStats)
+stackable_stew:AddCallback(ModCallbacks.MC_POST_RENDER, stackable_stew.RenderDamageStats)
 
 
 
 --To edit the position of the HUD element
-function mod:UpdateUIPos()
+function stackable_stew:UpdateUIPos()
     if (#damages ~= 0) and (Input.IsButtonPressed(Keyboard.KEY_COMMA,0)) then
         if Input.IsButtonPressed(Keyboard.KEY_RIGHT,0) then
             renderX = renderX + 1
@@ -178,4 +202,4 @@ function mod:UpdateUIPos()
           end
     end
 end
-mod:AddCallback(ModCallbacks.MC_POST_UPDATE, mod.UpdateUIPos)
+stackable_stew:AddCallback(ModCallbacks.MC_POST_UPDATE, stackable_stew.UpdateUIPos)
