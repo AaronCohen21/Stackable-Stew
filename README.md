@@ -1,3 +1,9 @@
+[![Steam Downloads](https://img.shields.io/steam/downloads/2785777374?color=blue&logo=Steam&style=flat-square)](https://steamcommunity.com/sharedfiles/filedetails/?id=2785777374)
+
+# Download
+
+To install the mod, go to the mod's official steam page [here](https://steamcommunity.com/sharedfiles/filedetails/?id=2785777374), and subscribe to it to have it automatically be installed to your game upon next launch. You can also clone this project directly into your mods folder.
+
 # Stackable-Stew
 This simple mod for The Binding of Isaac allows the effect of 'Red Stew' to stack upon itself. Rather than finding a way to change the properties of the original 'Red Stew' item, this mod introduces a new custom item called 'Stackable Stew' which I have coded from scratch to the best of my ability for it to completely replicate the effect of the original 'Red Stew' item. Obviously, the 'Stackable Stew' item has one major difference, that being if you pick up multiple stews you get multiple damage buffs!
 
