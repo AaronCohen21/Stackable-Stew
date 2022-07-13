@@ -7,9 +7,14 @@ To install the mod, go to the mod's official steam page [here](https://steamcomm
 # Stackable-Stew
 This simple mod for The Binding of Isaac allows the effect of 'Red Stew' to stack upon itself. Rather than finding a way to change the properties of the original 'Red Stew' item, this mod introduces a new custom item called 'Stackable Stew' which I have coded from scratch to the best of my ability for it to completely replicate the effect of the original 'Red Stew' item. Obviously, the 'Stackable Stew' item has one major difference, that being if you pick up multiple stews you get multiple damage buffs!
 
+NEW: If you have 5 or more Active Stew Buffs, your tears will automatically gain spectral and piercing effects. This helps get rid of the issue where your tears are so big that they hit the wall before they can collide with anything else. Tear effects will be automatically removed when your Active Stew Buffs goes below 5.
+
 # Important Notes
 The 'Stackable Stew' item is not in any item pools, therefore you cannot come across it normally in a run. Instead, the intended use is to run this mod in tandem with Da-Rules ([download here](https://steamcommunity.com/sharedfiles/filedetails/?id=2403871374)) and create a rule that will replace all 'Red Stew' items with 'Stackable Stew' items.
 
 The damage gained from a Stackable Stew is not directly added to your player stats, as for reasons that I can't explain, other items interfere with the temporary damage buff. Instead, the damage buff from each stew is applied to each tear when you fire it. You can see all your active Stew Buffs as well as your total damage including buffs in the bottom left corner of the screen when a buff is active.
 
 If you want to move the 'Stew Buffs' UI, first make sure you have an active buff so the UI is on screen. Next, hold ',' on your keyboard and use the arrow keys to move the UI.
+
+# Mod Config Menu
+NEW: You can now use [Mod Config Menu](https://steamcommunity.com/sharedfiles/filedetails/?id=2487535818) to fine tune the functionality of this mod. Specifically, you can change the minimum number of Active Stew Buffs required to gain spectral and piercing, and how often the Stackable Stew damage reduction occurs. [Mod Config Menu](https://steamcommunity.com/sharedfiles/filedetails/?id=2487535818) is not required to use this mod, however it is highly recomended.
