@@ -3,6 +3,10 @@
 local stackable_stew = RegisterMod("stackable_stew", 1)
 stackable_stew.STEW_ITEM_ID = Isaac.GetItemIdByName("Stackable Stew")
 local json = require("json")
+local MCM = nil
+if ModConfigMenu then
+   MCM = require("scripts.modconfig")
+end
 
 
 
@@ -13,19 +17,11 @@ local time = 0
 local renderX = 5
 local renderY = 212
 local spectralMinimum = 5
+local tickSpeed = 1
 
 
 
 --Save/Load Data
---For reasons I can't understand this causes an error
---However, everything seems to work fine without this
-function stackable_stew:saveData()
-    local table = { numStews, damages, time, renderX, renderY }
-    stackable_stew:SaveData(stackable_stew, json.encode(table))
-end
-
-stackable_stew:AddCallback(ModCallbacks.MC_PRE_GAME_EXIT, stackable_stew.saveData)
-
 function stackable_stew:loadData()
     if stackable_stew:HasData() then
         local data = json.decode(Isaac.LoadModData(stackable_stew))
@@ -35,10 +31,18 @@ function stackable_stew:loadData()
         renderX = data[4]
         renderY = data[5]
         spectralMinimum = data[6]
-    end
+        tickSpeed = data[7]
+    else stackable_stew:saveData() end
 end
 
 stackable_stew:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, stackable_stew.loadData)
+
+function stackable_stew:saveData()
+    local table = { numStews, damages, time, renderX, renderY, spectralMinimum, tickSpeed }
+    stackable_stew.SaveData(stackable_stew, json.encode(table))
+end
+
+stackable_stew:AddCallback(ModCallbacks.MC_PRE_GAME_EXIT, stackable_stew.saveData)
 
 
 
@@ -71,8 +75,8 @@ stackable_stew:AddCallback(ModCallbacks.MC_POST_UPDATE, stackable_stew.Update)
 --This handles the damage reduction over time per stew
 function stackable_stew:UpdateDamages()
     --Every time 1 second of game time has passed
-    if math.floor(Game().TimeCounter / 30) > time then
-        time = time + 1
+    if math.floor(Game().TimeCounter / 30) > (time + tickSpeed) then
+        time = (time + tickSpeed)
         --Find initial sum of damages
         damage_initial = 0
         for i in ipairs(damages) do damage_initial = damage_initial + damages[i] end
@@ -215,3 +219,71 @@ function stackable_stew:UpdateUIPos()
 end
 
 stackable_stew:AddCallback(ModCallbacks.MC_POST_UPDATE, stackable_stew.UpdateUIPos)
+
+
+
+-- MOD CONFIG MENU
+if ModConfigMenu then
+    local category = "Stackable Stew"
+    MCM.UpdateCategory(category, {
+      Info = "Settings For The Stackable Stew Mod",
+    })
+
+    --Spectral Threshold
+    MCM.AddSetting(category, {
+
+        Type = ModConfigMenu.OptionType.NUMBER,
+    
+        CurrentSetting = function() return spectralMinimum end,
+    
+        Minimum = 1,
+        Maximum = 10,
+    
+        Display = function() return "Spectral Threshold: " .. spectralMinimum end,
+    
+        OnChange = function(i) spectralMinimum = i end,
+    
+        Info = {"The minimum number of Active Stew Buffs required to gain Spectral + Piercing Tears"}
+      })
+
+      --Tick Speed
+      MCM.AddSetting(category, {
+
+        Type = ModConfigMenu.OptionType.NUMBER,
+    
+        CurrentSetting = function() return tickSpeed end,
+    
+        Minimum = 1,
+        Maximum = 30,
+    
+        Display = function() return "Tick Speed: " .. tickSpeed end,
+    
+        OnChange = function(i) tickSpeed = i end,
+    
+        Info = {"The number of seconds it takes for Red Stew to decrease in damage (default is 1 tick per second)"}
+      })
+
+      MCM.AddSpace(category)
+
+      MCM.AddSetting(category, {
+
+        Type = ModConfigMenu.OptionType.BOOLEAN,
+    
+        CurrentSetting = function() return resetSettings end,
+    
+        Display = function() return "RESET ALL SETTINGS" end,
+    
+        OnChange = function(boolean)
+          resetSettings = boolean
+    
+          renderX = 5
+          renderY = 212
+          spectralMinimum = 5
+          tickSpeed = 1
+    
+          stackable_stew:saveData()
+        end,
+    
+        Info = {"RESET ALL SETTINGS TO DEFAULT"}
+    })
+end
